@@ -5,8 +5,8 @@ const Telegraf = require('telegraf'),
 const channelbot = new Telegraf(process.env.SECRET),
       channels = JSON.parse(fs.readFileSync("./channels.json", "utf8"));
 
-channelbot.telegram.setWebhook("https://gogoshaggz.herokuapp.com"+process.env.PATH);
-channelbot.startWebhook(process.env.PATH, null, process.env.PORT);
+channelbot.telegram.setWebhook("https://gogoshaggz.herokuapp.com"+process.env.WEBHOOK_PATH);
+channelbot.startWebhook(process.env.WEBHOOK_PATH, null, process.env.PORT);
 
 channelbot.command("perms", ctx => {
   if (ctx.message.from.id !== 601129114 && ctx.message.from.id !== 502689293) return ctx.reply("You're not authorized to run this command!");
