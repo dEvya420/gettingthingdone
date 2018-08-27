@@ -1,0 +1,13 @@
+{
+  "name": "channel-manager",
+  "version": "0.0.1",
+  "description": "What am I about?",
+  "main": "server.js",
+  "author": "Austin Huang <im@austinhuang.me> (https://austinhuang.me)",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "telegraf": "^3.21.1"
+  }
+}
