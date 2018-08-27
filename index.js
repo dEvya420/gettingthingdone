@@ -6,7 +6,7 @@ const channelbot = new Telegraf("677740041:AAEABE9ZHNvwQlHRmA54tYfsgxs405haWtM")
       channels = JSON.parse(fs.readFileSync("./channels.json", "utf8"));
 
 channelbot.command("perms", ctx => {
-  if (ctx.message.from.id !== 265228448 && ctx.message.from.id !== 502689293) return ctx.reply("You're not authorized to run this command!");
+  if (ctx.message.from.id !== 601129114 && ctx.message.from.id !== 502689293) return ctx.reply("You're not authorized to run this command!");
   channels.managing = ctx.message.from.id;
   fs.writeFile("./channels.json", JSON.stringify(channels), "utf8");
   ctx.reply("Forward a message that's authored by the person you wish to manage permission of.", {reply_markup: {inline_keyboard: [[{text: "Quit", callback_data: "mquit"}]]}});
