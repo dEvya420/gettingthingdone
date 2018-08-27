@@ -67,5 +67,3 @@ channelbot.on("callback_query", ctx => {
     }
   }
 });
-
-channelbot.startPolling();
