@@ -2,7 +2,7 @@ const Telegraf = require('telegraf'),
       fs = require("fs");
 // note to you: don't remove above if you're hosting yourself
 // note to me:  only copy everything below this line to glitch
-const channelbot = new Telegraf("677740041:AAEABE9ZHNvwQlHRmA54tYfsgxs405haWtM"),
+const channelbot = new Telegraf(process.env.SECRET),
       channels = JSON.parse(fs.readFileSync("./channels.json", "utf8"));
 
 channelbot.command("perms", ctx => {
