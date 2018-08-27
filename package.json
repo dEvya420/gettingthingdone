@@ -2,10 +2,10 @@
   "name": "channel-manager",
   "version": "0.0.1",
   "description": "What am I about?",
-  "main": "server.js",
+  "main": "index.js",
   "author": "Austin Huang <im@austinhuang.me> (https://austinhuang.me)",
   "scripts": {
-    "start": "node server.js"
+    "start": "node index.js"
   },
   "dependencies": {
     "telegraf": "^3.21.1"
