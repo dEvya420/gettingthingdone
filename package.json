@@ -8,6 +8,7 @@
     "start": "node index.js"
   },
   "dependencies": {
-    "telegraf": "^3.21.1"
+    "telegraf": "^3.21.1",
+    "mongoose": "^5.2.10"
   }
 }
