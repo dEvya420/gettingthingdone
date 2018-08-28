@@ -17,12 +17,13 @@ channelbot.command("perms", ctx => {
 
 channelbot.on("message", ctx => {
   if (ctx.message.forward_from && channels.managing === ctx.message.from.id) {
+    ctx.deleteMessage();
+    if (!ctx.message.from.username) return ctx.reply("Said person does not have a public username.\n\nForward a message that's authored by the person you wish to manage permission of.", {reply_markup: {inline_keyboard: [[{text: "Quit", callback_data: "mquit"}]]}});
     if (!channels.users[ctx.message.forward_from.id]) {
       channels.users[ctx.message.forward_from.id] = channels.channels.map(c => false);
       fs.writeFile("./channels.json", JSON.stringify(channels), "utf8");
     }
     else if (channels.users[ctx.message.forward_from.id].length !== channels.channels.length) {
-      ctx.deleteMessage();
       channels.users[ctx.message.forward_from.id] = channels.channels.map(c => {
         if (channels.users[ctx.message.forward_from.id][channels.channels.indexOf(c)]) return channels.users[ctx.message.forward_from.id][channels.channels.indexOf(c)];
         else return false;
@@ -36,7 +37,7 @@ channelbot.on("message", ctx => {
   else if (channels.managing === ctx.message.from.id) ctx.reply("Not a forwarded message! Try again!", {reply_markup: {inline_keyboard: [[{text: "Quit", callback_data: "mquit"}]]}});
   else if (channels.time[ctx.message.from.id.toString()] > Date.now()) ctx.reply("You can only send 1 message per hour. Please wait till: "+new Date(channels.time[ctx.message.from.id.toString()]).toString());
   else if (channels.users[ctx.message.from.id.toString()].filter(p => p === true).length > 0) {
-    let a = channels.channels.filter(c => channels.users[ctx.message.from.id][channels.channels.indexOf(c)] === true).map(c => [{text: c[0], callback_data: "send:"+c[1]}]);
+    let a = channels.channels.filter(c => channels.users[ctx.message.from.id.toString()][channels.channels.indexOf(c)] === true && channels.time[ctx.message.from.id.toString()][channels.channels.indexOf(c)]).map(c => [{text: c[0], callback_data: "send:"+c[1]+":"+channels.channels.indexOf(c)}]);
     a.push([{text: "Cancel", callback_data: "quit"}]);
     ctx.reply("Please select your destination.", {reply_to_message_id: ctx.message.message_id, reply_markup: {inline_keyboard: a}});
   }
@@ -52,11 +53,13 @@ channelbot.on("callback_query", ctx => {
     ctx.editMessageReplyMarkup({inline_keyboard: a});
   }
   else if (ctx.callbackQuery.data.startsWith("send:")) {
-    channels.time[ctx.callbackQuery.from.id.toString()] = Date.now() + 3600000;
+    channels.time[ctx.callbackQuery.from.id.toString()][parseInt(ctx.callbackQuery.data.split(":")[2])] = Date.now() + 3600000;
     fs.writeFile("./channels.json", JSON.stringify(channels), "utf8");
     ctx.answerCbQuery("Message sent!");
     ctx.telegram.forwardMessage(ctx.callbackQuery.data.split(":")[1], ctx.callbackQuery.message.chat.id, ctx.callbackQuery.message.reply_to_message.message_id);
-    ctx.telegram.deleteMessage(ctx.callbackQuery.message.chat.id, ctx.callbackQuery.message.message_id);
+    let a = channels.channels.filter(c => channels.users[ctx.message.from.id.toString()][channels.channels.indexOf(c)] === true && channels.time[ctx.message.from.id.toString()][channels.channels.indexOf(c)]).map(c => [{text: c[0], callback_data: "send:"+c[1]+":"+channels.channels.indexOf(c)}]);
+    a.push([{text: "Cancel", callback_data: "quit"}]);
+    ctx.editMessageReplyMarkup({inline_keyboard: a});
   }
   else if (ctx.callbackQuery.data.endsWith("quit")) {
     ctx.answerCbQuery("Command teminated!");
